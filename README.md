@@ -55,7 +55,7 @@ src/
 
 ```bash
 # 1. Clone repo
-git clone <your-repo-url>
+git clone <https://github.com/neeludvadia/Gift-Suggestion-Dashboard.git>
 
 # 2. Install dependencies
 npm install
