@@ -6,7 +6,9 @@ import { useCustomerStore } from '@/store/customerStore';
 import AddCustomerDialog from './AddCustomerDialog';
 import DeleteCustomerDialog from './DeleteCustomerDialog';
 import EditCustomerDialog from './EditCustomerDialog';
-import { useState } from 'react';
+import { ReactHTMLElement, useRef, useState } from 'react';
+import BulkUploadDialog from './BulkUploadDialog';
+import { toast } from 'react-toastify';
 
 
 // tiny helper to await delays
@@ -28,11 +30,15 @@ function AiStatus({ text }: { text: string | null }) {
 
 
 const CustomerTable = () => {
-    const {customers,updateGift,addCustomer} = useCustomerStore()
-
-
-      const [loadingId, setLoadingId] = useState<number | null>(null)
-  const [aiStatusById, setAiStatusById] = useState<Record<number, string | null>>({})
+    const {customers,updateGift,addCustomer,deleteMultipleCustomers} = useCustomerStore()
+    
+    
+          const [loadingId, setLoadingId] = useState<number | null>(null)
+          const [aiStatusById, setAiStatusById] = useState<Record<number, string | null>>({})
+          const [selectedIds, setSelectedIds] = useState<number[]>([])
+          const [selectAll, setSelectAll] = useState(false)
+    
+          const selectedDeleteButtonRef = useRef<HTMLButtonElement | null>(null);
   
   const setStatus = (id: number, text: string | null) =>
     setAiStatusById((s) => ({ ...s, [id]: text }))
@@ -94,16 +100,67 @@ const CustomerTable = () => {
   }
 
 
+  const handleSelect = (id: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(customers.map((c) => c.id))
+    }
+    setSelectAll(!selectAll)
+  }
+
+  const handleDeleteSelected = () => {
+    if (selectedIds.length === 0) {
+      toast.info('No customers selected.')
+      return
+    }
+
+    if (!confirm(`Delete ${selectedIds.length} selected customers?`)) return
+
+    deleteMultipleCustomers(selectedIds)
+    setSelectedIds([])
+    setSelectAll(false)
+    toast.success('Selected customers deleted successfully.')
+  }
+
+
   return (
     <div className='rounded-2xl border-2 p-2 mt-4'>
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-semibold">Customer List</h2>
+        <div className="flex gap-4">
+          <Button
+          ref={selectedDeleteButtonRef}
+          className='hover:cursor-pointer'
+            variant="destructive"
+            size="sm"
+            onClick={handleDeleteSelected}
+            disabled={selectedIds.length == 0}
+          >
+            🗑️ Delete Selected <span>{selectedIds?.length > 0?`(${selectedIds?.length})`:""}</span>
+          </Button>
+    <BulkUploadDialog />
         <AddCustomerDialog />
+  </div>
       </div>
        <Table>
       {/* <TableCaption>list of Customers</TableCaption> */}
       <TableHeader>
         <TableRow>
+          <TableHead>
+              <input
+                type="checkbox"
+                checked={selectAll}
+                onChange={handleSelectAll}
+                className="cursor-pointer accent-indigo-600"
+              />
+            </TableHead>
           <TableHead className="">Id</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Occasion</TableHead>
@@ -115,7 +172,22 @@ const CustomerTable = () => {
       </TableHeader>
       <TableBody>
         {customers.map((item,index) => (
-          <TableRow key={index}>
+          <TableRow
+           key={item?.id}
+                className={`transition-colors ${
+                  selectedIds.includes(item?.id)
+                    ? 'bg-indigo-50 hover:bg-indigo-100'
+                    : 'hover:bg-gray-50'
+                }`}
+          >
+            <TableCell>
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.includes(item?.id)}
+                    onChange={() => handleSelect(item?.id)}
+                    className="cursor-pointer accent-indigo-600"
+                  />
+                </TableCell>
             <TableCell className="font-medium">{item?.id}</TableCell>
             <TableCell className="font-medium">{item?.name}</TableCell>
             <TableCell>{item?.occasion}</TableCell>

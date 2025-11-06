@@ -8,6 +8,8 @@ interface CustomerState {
   updateGift: (id: number, gift: Customer['gift']) => void
   removeCustomer: (id: number) => void
   updateCustomer: (id: number, updatedData: Partial<Customer>) => void
+  addMultipleCustomers:(Customer:Customer[])=>void
+  deleteMultipleCustomers:(ids:number[])=>void
 }
 
 export const useCustomerStore = create<CustomerState>()(
@@ -58,6 +60,14 @@ export const useCustomerStore = create<CustomerState>()(
             item.id === id ? { ...item, ...updatedData } : item
           ),
         })),
+        addMultipleCustomers: (customers: Customer[]) =>
+          set((state) => ({
+          customers: [...state.customers, ...customers],
+          })),
+          deleteMultipleCustomers: (ids: number[]) =>
+            set((state) => ({
+            customers: state.customers.filter((item) => !ids.includes(item.id)),
+          })),
     }),
     {
       name: 'customer-storage', // key for localStorage persistence
