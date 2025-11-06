@@ -59,7 +59,7 @@ const EditCustomerDialog = ({ customer }: Props) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button className='hover:cursor-pointer' variant="outline" size="sm">
           <Pencil className="w-4 h-4" />
         </Button>
       </DialogTrigger>

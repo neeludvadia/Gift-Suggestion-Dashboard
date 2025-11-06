@@ -2,6 +2,7 @@ export interface Gift {
   title: string
   image: string
   url: string
+  explanation:string
 }
 
 export interface Customer {
