@@ -1,10 +1,15 @@
 "use client"
-import { Bell, Menu } from 'lucide-react';
-import React, { useState } from 'react';
+import { Bell, Menu,Eclipse } from 'lucide-react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import AddCustomerDialog from './AddCustomerDialog';
 import BulkUploadDialog from './BulkUploadDialog';
 
-const Navbar = () => {
+interface NavbarProps {
+  onToggleSidebar: Dispatch<SetStateAction<boolean>>
+}
+
+
+const Navbar = ({ onToggleSidebar }: NavbarProps) => {
 
   const [isOpen,setIsOpen] = useState<boolean>(false);
 
@@ -12,8 +17,19 @@ const Navbar = () => {
     <div className='bg-white w-full shadow-lg rounded-2xl flex justify-between py-2 px-4 items-center sticky top-0 z-50 border-2 border-slate-300'>
       {/* <h1 className='text-2xl font'>Gift Suggestion</h1>   */}
       {/* Left section */}
+
+       <div className="flex items-center gap-3">
+        {/* Mobile Sidebar Toggle */}
+        <button
+          onClick={()=>{onToggleSidebar((prev)=>(!prev))}}
+          className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+        >
+          <Menu size={22} />
+        </button>
+        </div>
+
       <h1 className="text-xl sm:text-2xl font-semibold truncate">
-        Gift Suggestion
+        Dashboard
       </h1>
       <div className='flex gap-4 items-center'>
         {/* <div className='relative'>
@@ -50,10 +66,10 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="sm:hidden flex items-center justify-center ml-2 p-2 rounded-md hover:bg-gray-100"
+          className="sm:hidden flex items-center justify-center ml-2 p-2 rounded-md hover:bg-gray-100 hover:cursor-pointer"
           onClick={() => setIsOpen(!isOpen)}
         >
-          <Menu size={22} />
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-ellipsis-vertical-icon lucide-ellipsis-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
 
       </div>

@@ -151,7 +151,7 @@ const CustomerTable = () => {
         <AddCustomerDialog />
   </div>
       </div>
-      <div className="hidden sm:block overflow-x-auto">
+      <div className="hidden sm:block overflow-x-auto overflow-y-scroll max-h-[75vh]">
       
        <Table>
       {/* <TableCaption>list of Customers</TableCaption> */}
