@@ -117,7 +117,7 @@ const BulkUploadDialog = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="w-[95vw] sm:max-w-2xl overflow-x-auto max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Bulk Upload Employees</DialogTitle>
         </DialogHeader>
@@ -143,59 +143,63 @@ const BulkUploadDialog = () => {
         {showMapper && (
           <div className="mt-4">
             <h3 className="font-medium text-sm mb-2">🧩 Column Mapping</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {Object.keys(mapping).map((appField) => (
-                <div key={appField} className="flex flex-col text-sm">
-                  <label className="font-semibold mb-1">{appField}</label>
-                  <select
-                    className="border rounded-md p-1"
-                    value={mapping[appField]}
-                    onChange={(e) =>
-                      setMapping({ ...mapping, [appField]: e.target.value })
-                    }
-                  >
-                    <option value="">-- Select Column --</option>
-                    {detectedColumns.map((col) => (
-                      <option key={col} value={col}>
-                        {col}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ))}
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full px-1">
+  {Object.keys(mapping).map((appField) => (
+    <div key={appField} className="flex flex-col text-sm min-w-0">
+      <label className="font-semibold mb-1">{appField}</label>
+      <select
+        className="border rounded-md p-2 text-sm w-full"
+        value={mapping[appField]}
+        onChange={(e) =>
+          setMapping({ ...mapping, [appField]: e.target.value })
+        }
+      >
+        <option value="">-- Select Column --</option>
+        {detectedColumns.map((col) => (
+          <option key={col} value={col}>
+            {col}
+          </option>
+        ))}
+      </select>
+    </div>
+  ))}
+</div>
+
 
             {/* Preview */}
             <div className="mt-6">
-              <h4 className="font-medium text-sm mb-2">👁️ Preview (first 5 rows)</h4>
-              <div className="overflow-x-auto border rounded-lg text-sm">
-                <table className="min-w-full border-collapse">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      {detectedColumns.map((col) => (
-                        <th key={col} className="border p-2 text-left">
-                          {col}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {jsonData.slice(0, 5).map((row, idx) => (
-                      <tr key={idx} className="hover:bg-gray-50">
-                        {detectedColumns.map((col) => (
-                          <td key={col} className="border p-2">
-                            {String(row[col] ?? '')}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+  <h4 className="font-medium text-sm mb-2">👁️ Preview (first 5 rows)</h4>
+  <div className="overflow-x-auto border rounded-lg text-xs sm:text-sm max-h-[250px] sm:max-h-none">
+    <div className="min-w-max">
+      <table className="w-full border-collapse">
+        <thead className="bg-gray-50">
+          <tr>
+            {detectedColumns.map((col) => (
+              <th key={col} className="border p-2 text-left whitespace-nowrap">
+                {col}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {jsonData.slice(0, 5).map((row, idx) => (
+            <tr key={idx} className="hover:bg-gray-50">
+              {detectedColumns.map((col) => (
+                <td key={col} className="border p-2 whitespace-nowrap">
+                  {String(row[col] ?? '')}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 
             {/* Action Buttons */}
-            <div className="mt-6 flex justify-end gap-3">
+            <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
               <Button
                 variant="secondary"
                 onClick={() => {
