@@ -56,7 +56,13 @@ const AddCustomerDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className='hover:cursor-pointer' variant="default">+ Add Customer</Button>
+        <Button
+  variant="default"
+  size="lg"
+  className="hover:cursor-pointer md:font-semibold md:text-base md:px-5 md:py-2 text-black bg-white border"
+>
+  + Add Customer
+</Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">

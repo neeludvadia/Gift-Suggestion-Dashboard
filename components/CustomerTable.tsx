@@ -131,7 +131,9 @@ const CustomerTable = () => {
 
 
   return (
-    <div className='rounded-2xl border-2 p-2 mt-4'>
+    <>
+    
+    <div className='rounded-2xl border-2 p-2 mt-4 md:block hidden'>
       <div className="flex justify-between items-center mb-3">
         <h2 className="text-lg font-semibold">Customer List</h2>
         <div className="flex gap-4">
@@ -149,6 +151,8 @@ const CustomerTable = () => {
         <AddCustomerDialog />
   </div>
       </div>
+      <div className="hidden sm:block overflow-x-auto">
+      
        <Table>
       {/* <TableCaption>list of Customers</TableCaption> */}
       <TableHeader>
@@ -262,14 +266,79 @@ const CustomerTable = () => {
           </TableRow>
         ))}
       </TableBody>
-      {/* <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter> */}
     </Table>
     </div>
+    </div>
+
+          {/* Mobile View */}
+
+
+       <div className="grid grid-cols-1 gap-3 sm:hidden mt-4">
+  {customers.map((item) => (
+    <div
+      key={item.id}
+      className="border border-gray-200 rounded-xl p-3 shadow-sm bg-white transition-all hover:shadow-md"
+    >
+      <div className="flex justify-between items-start mb-2">
+        <div>
+          <h3 className="font-semibold text-base">{item.name}</h3>
+          <p className="text-xs text-gray-500">{item.company}</p>
+        </div>
+        <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">
+          {item.occasion}
+        </span>
+      </div>
+
+      <p className="text-sm text-gray-600">
+        Budget: <span className="font-medium">${item.budget}</span>
+      </p>
+
+      {item.gift ? (
+        <div className="flex items-center gap-2 mt-2">
+          <Image
+            src={item.gift.image}
+            alt={item.gift.title}
+            width={40}
+            height={40}
+            unoptimized
+            className="rounded border"
+          />
+          <div>
+            <p className="text-sm font-medium">{item.gift.title}</p>
+            <a
+              className="text-xs text-indigo-600 hover:underline"
+              href={item.gift.url}
+              target="_blank"
+              rel="noreferrer"
+            >
+              View Product →
+            </a>
+          </div>
+        </div>
+      ) : (
+        <p className="text-xs text-gray-400 italic mt-2">No suggestion yet</p>
+      )}
+
+      {/* Optional: small action bar for mobile */}
+      <div className="flex justify-end mt-3 gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => suggestGift(item.id, item.budget || 0, item.occasion)}
+          disabled={loadingId === item.id}
+        >
+          {loadingId === item.id ? 'Thinking…' : 'Suggest'}
+        </Button>
+        <EditCustomerDialog customer={item} />
+        <DeleteCustomerDialog id={item.id} name={item.name} />
+      </div>
+    </div>
+  ))}
+</div>
+
+
+
+    </>
   );
 }
 
